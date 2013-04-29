@@ -8,7 +8,7 @@
 
 var DYNAMIC_VALUE_SHEET_ID = "0AgtmhFLLc2KadG9VMHZIb2hIeVY5emlVRHI2NXMyTGc";
 
-var sheetName = "DynamicValues";
+var sheetName = "DynamicValues-Flight";
 
 var KEY_VALUE_SHEET_NAME = "key=value";
 
