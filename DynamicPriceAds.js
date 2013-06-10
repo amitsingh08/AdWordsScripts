@@ -8,9 +8,9 @@
 
 var DYNAMIC_VALUE_SHEET_ID = "0AgtmhFLLc2KadG9VMHZIb2hIeVY5emlVRHI2NXMyTGc";
 
-var sheetName = "DynamicValues-Flight";
+var sheetName = "DynamicValues";
 
-var KEY_VALUE_SHEET_NAME = "key=value";
+var KEY_VALUE_SHEET_NAME = "key=value 5";
 
 var MAX_RUNTIME_SECONDS = 28*60;  //28 mins
 
@@ -19,15 +19,18 @@ var START_TIME = (new Date()).getTime();
 
 /****************************************************************************************************
  MAIN
- ****************************************************************************************************/
+****************************************************************************************************/
 
 function main() {
   Logger.log("START");
   var values = getSheetValues(DYNAMIC_VALUE_SHEET_ID, sheetName);
+  var startProcessingFromRow = getValue("StartProcessingFromRow") ? getValue("StartProcessingFromRow") : 2;
+  var endProcessingAtRow = getValue("EndProcessingAtRow") ? getValue("EndProcessingAtRow") : values.length;
   var lastRowProcessed = getValue("LastRowProcessed");
-  var i = (lastRowProcessed && lastRowProcessed<values.length) ? lastRowProcessed : 1;
-  Logger.log("Start from row " + (i+1));
-  while (i<values.length) {
+  var i = startProcessingFromRow-1;
+  if (lastRowProcessed && lastRowProcessed > startProcessingFromRow ) i = lastRowProcessed;
+  if ( i < endProcessingAtRow )   Logger.log("Start from row " + (i+1));
+  while (i<endProcessingAtRow && i<values.length) {
     var camp = escapeSingleQuote(values[i][1].trim());
     var adGroup = escapeSingleQuote(values[i][2].trim());
     var param1 = values[i][3];
@@ -38,18 +41,14 @@ function main() {
     } else {
       Logger.log('Failed processing row: ' + (i+1) );
     }
+    lastRowProcessed = i+1;
+    i++;
     if ( isTimeout() ) {
-      lastRowProcessed = i+1;
       Logger.log("Stop premature at row " + lastRowProcessed);
       break;
-    } else {
-      i++;
     }
   }
-  if ( i==values.length ) {
-    Logger.log("All rows processed");
-    lastRowProcessed = values.length;
-  }
+  if ( i==endProcessingAtRow )     Logger.log("All rows processed");
   getKV()["LastRowProcessed"] = lastRowProcessed;
   preExit();
   Logger.log("END");
