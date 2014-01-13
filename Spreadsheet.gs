@@ -1,6 +1,7 @@
 /************************************************************************************
   Spreadsheet library providing opening, querying, updating, data
   Author: amitsingh@google.com
+  Date: 2014-01-13
 
   Example Code Below:
   queryTest() - how to run a query against a spreadsheet
